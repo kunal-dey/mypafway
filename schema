@@ -1,0 +1,113 @@
+Table mw_users {
+  id SERIAL [pk, increment]
+  role_id integer [ref: > mw_roles.id]
+  username VARCHAR(28) [unique]
+  first_name VARCHAR(50)
+  middle_name VARCHAR(50)
+  last_name VARCHAR(50)
+  email VARCHAR(50) [unique]
+  password VARCHAR(255)
+  email_verified boolean
+  status enum
+  created_at datetime
+  updated_at datetime
+}
+
+Table mw_roles {
+  id SERIAL [pk, increment]
+  name varchar(28)
+  slug varchar(28)
+  status enum
+  created_at datetime
+  updated_at datetime
+}
+
+Table mw_auto_part_category {
+  id SERIAL [pk, increment]
+  name varchar(28) [unique]
+  created_at datetime
+  updated_at datetime
+}
+
+Table mw_auto_part_subcategory {
+  id SERIAL [pk, increment]
+  category_id integer [ref: > mw_auto_part_category.id]
+  name varchar(28) [unique]
+  created_at datetime
+  updated_at datetime
+}
+
+Table mw_auto_part_product {
+  id SERIAL [pk, increment]
+  sub_category_id integer [ref: > mw_auto_part_subcategory.id]
+  distributor_id integer [ref: > mw_auto_part_distributor.id]
+  supplier_id integer [ref: > mw_auto_part_supplier.id]
+  manufacturer_id integer [ref: > mw_auto_part_manufacturer.id]
+  current_owner varchar(20)
+  affiliate_type boolean
+}
+
+Table mw_auto_part_manufacturer {
+  id SERIAL [pk, increment]
+  name varchar(20)
+  email varchar(50)
+  affiliate_link varchar(50)
+  turnover integer
+  minimum_order_quantity integer
+}
+
+Table mw_auto_part_supplier {
+  id SERIAL [pk, increment]
+  name varchar(20)
+  email varchar(50)
+}
+
+
+Table mw_auto_part_distributor {
+  id SERIAL [pk, increment]
+  name varchar(20)
+  email varchar(20)
+}
+
+Table mw_auto_part_customer {
+  id SERIAL [pk, increment]
+  name varchar(20)
+  email varchar(50)
+  gender varchar(10)
+}
+
+Table mw_customer_orders {
+  id SERIAL [pk, increment]
+  customer_id integer [ref: > mw_auto_part_customer.id]
+  distributor_id integer [ref: > mw_auto_part_distributor.id]
+}
+
+Table customer_order_items {
+  customer_order_id integer [ref: > mw_customer_orders.id]
+  product_id integer [ref: > mw_auto_part_product.id]
+  quantity integer
+}
+
+Table mw_distributor_orders {
+  id SERIAL [pk, increment]
+  supplier_id integer [ref: > mw_auto_part_supplier.id]
+  distributor_id integer [ref: > mw_auto_part_distributor.id]
+}
+
+Table distributor_order_items {
+  distributor_order_id integer [ref: > mw_distributor_orders.id]
+  product_id integer [ref: > mw_auto_part_product.id]
+  quantity integer
+}
+
+Table mw_supplier_orders {
+  id SERIAL [pk, increment]
+  supplier_id integer [ref: > mw_auto_part_supplier.id]
+  manufacturer_id integer [ref: > mw_auto_part_manufacturer.id]
+}
+
+Table supplier_order_items {
+  supplier_order_id integer [ref: > mw_supplier_orders.id]
+  product_id integer [ref: > mw_auto_part_product.id]
+  quantity integer
+}
